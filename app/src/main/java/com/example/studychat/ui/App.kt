@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.studychat.ui.page.ChatListPage
+import com.example.studychat.ui.page.ChatPage
 import com.example.studychat.ui.page.ContactPage
 import com.example.studychat.ui.page.SelfPage
 import com.example.studychat.utils.PreferenceUtils
@@ -34,31 +35,34 @@ import com.example.studychat.utils.PreferenceUtils
 @Composable
 fun App(navController: NavController){
     val innerNavController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val navBackStackEntry by innerNavController.currentBackStackEntryAsState()
     val startDestination = Destination.ChatListPage
     var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
     val currentRoute = navBackStackEntry?.destination?.route
+    val noBottomBarRoutes = listOf("chat")
 
     Scaffold (
         bottomBar = {
-            BottomAppBar {
-                NavigationBar {
-                    Destination.entries.forEachIndexed { index,destination ->
-                        NavigationBarItem(
-                            selected = selectedDestination == index,
-                            onClick = {
-                                innerNavController.navigate(destination.route){
-                                    popUpTo(innerNavController.graph.startDestinationId){ saveState = true}
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                                selectedDestination = index
-                            },
-                            icon = {
-                                Icon(painter = painterResource(destination.icon), contentDescription = destination.contentDescription)
-                            },
-                            label = { Text(destination.label) }
-                        )
+            if(currentRoute !in noBottomBarRoutes){
+                BottomAppBar {
+                    NavigationBar {
+                        Destination.entries.forEachIndexed { index,destination ->
+                            NavigationBarItem(
+                                selected = selectedDestination == index,
+                                onClick = {
+                                    innerNavController.navigate(destination.route){
+                                        popUpTo(innerNavController.graph.startDestinationId){ saveState = true}
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                    selectedDestination = index
+                                },
+                                icon = {
+                                    Icon(painter = painterResource(destination.icon), contentDescription = destination.contentDescription)
+                                },
+                                label = { Text(destination.label) }
+                            )
+                        }
                     }
                 }
             }
@@ -92,12 +96,17 @@ fun AppNavHost(
         Destination.entries.forEach{ destination ->
             composable(destination.route){
                 when(destination){
-                    Destination.ChatListPage -> ChatListPage()
+                    Destination.ChatListPage -> ChatListPage(navController)
                     Destination.ContactPage -> ContactPage()
                     Destination.SelfPage -> SelfPage(onLogout)
                 }
             }
         }
+
+        composable("chat") {
+            ChatPage(navController)
+        }
+
     }
 }
 

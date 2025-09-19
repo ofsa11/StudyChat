@@ -1,5 +1,7 @@
 package com.example.studychat.ui.page
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,15 +26,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import coil3.compose.AsyncImage
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.Navigator
+import androidx.navigation.compose.rememberNavController
 import com.example.studychat.R
 import com.example.studychat.data.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatListPage(){
+fun ChatListPage(
+    navController: NavController
+){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -51,11 +59,12 @@ fun ChatListPage(){
                 .padding(innerPadding)
                 .fillMaxSize()
         ){
-            items(100){
+            items(30){
                 MessageCard(
-                    modifier = Modifier.clickable(
-
-                    )
+                    navController = navController,
+                    modifier = Modifier.clickable{
+                        navController.navigate("chat")
+                    }
                 )
             }
         }
@@ -64,6 +73,7 @@ fun ChatListPage(){
 
 @Composable
 fun MessageCard(
+    navController: NavController,
     modifier: Modifier
 ){
     val user = User(R.mipmap.ic_default,"username", "message")
@@ -80,7 +90,7 @@ fun MessageCard(
         colors = CardDefaults.cardColors(
             contentColor = MaterialTheme.colorScheme.primary
         ),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 5.dp,)
     ){

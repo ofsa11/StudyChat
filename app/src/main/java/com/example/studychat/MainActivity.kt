@@ -21,30 +21,30 @@ class MainActivity : ComponentActivity() {
         PreferenceUtils.init(this)
         setContent {
             StudyChatTheme {
-//                val navController = rememberNavController()
-//                val isLogin = PreferenceUtils.getBoolean("isLogin",false)
-//
-//                NavHost(
-//                    navController = navController,
-//                    startDestination = if(isLogin) "main" else "login"
-//                ){
-//                    composable("login"){
-//                        UserManagePage(
-//                            onLoginSuccess = {
-//                                PreferenceUtils.putBoolean("isLogin",true)
-//                                navController.navigate("main"){
-//                                    popUpTo("login"){
-//                                        inclusive = true
-//                                    }
-//                                }
-//                            }
-//                        )
-//                    }
-//                    composable("main") {
-//                        App(navController)
-//                    }
-//                }
-                ChatPage()
+                val navController = rememberNavController()
+                val isLogin = PreferenceUtils.getBoolean("isLogin",false)
+
+                NavHost(
+                    navController = navController,
+                    startDestination = if(isLogin) "main" else "login"
+                ){
+                    composable("login"){
+                        UserManagePage(
+                            onLoginSuccess = {
+                                PreferenceUtils.putBoolean("isLogin",true)
+                                navController.navigate("main"){
+                                    popUpTo("login"){
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                        )
+                    }
+                    composable("main") {
+                        App(navController)
+                    }
+                }
+                //ChatPage()
             }
         }
     }

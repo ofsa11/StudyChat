@@ -46,6 +46,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.studychat.R
 import kotlinx.coroutines.launch
 
@@ -55,7 +57,9 @@ data class MessageData(
 )
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatPage(){
+fun ChatPage(
+    navController: NavController
+){
 
     val messages = remember{
         mutableStateListOf(
@@ -76,7 +80,9 @@ fun ChatPage(){
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = {}
+                        onClick = {
+                            navController.popBackStack()
+                        }
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_return),
@@ -228,5 +234,5 @@ fun UserInput(onMessageSent: (String) -> Unit){
 @Preview
 @Composable
 fun ChatPagePreview2(){
-    ChatPage()
+    ChatPage(navController = rememberNavController())
 }
