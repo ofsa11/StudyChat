@@ -86,12 +86,13 @@ fun App(navController: NavController){
 fun AppNavHost(
     navController: NavHostController,
     startDestination: Destination,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     onLogout: () -> Unit
 ){
     NavHost(
         navController,
         startDestination = startDestination.route,
+        modifier = modifier
     ){
         Destination.entries.forEach{ destination ->
             composable(destination.route){

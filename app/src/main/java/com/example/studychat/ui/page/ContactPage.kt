@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,11 +31,11 @@ import com.example.studychat.data.model.User
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactPage(){
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold (
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            MediumTopAppBar(
                 title = {
                     Text("联系人")
                 },
@@ -47,8 +48,8 @@ fun ContactPage(){
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            items(10){
-                ContactItem()
+            items(10){index->
+                ContactItem(index)
             }
         }
 
@@ -56,8 +57,10 @@ fun ContactPage(){
 }
 
 @Composable
-fun ContactItem(){
-    val user = User(R.mipmap.ic_default,"username", "message")
+fun ContactItem(
+    index: Int
+){
+    val user = User(R.mipmap.ic_default,"username${index + 1}", "message")
     Surface (
         shape = MaterialTheme.shapes.medium,
         shadowElevation = 5.dp,

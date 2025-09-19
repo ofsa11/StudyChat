@@ -5,7 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import coil3.compose.AsyncImage
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,15 +42,16 @@ import com.example.studychat.R
 import com.example.studychat.data.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ChatListPage(
     navController: NavController
 ){
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            MediumTopAppBar(
                 title = {
                     Text("消息")
                 },
@@ -55,16 +61,22 @@ fun ChatListPage(
     )
     { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                top = innerPadding.calculateTopPadding(),
+                start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+                bottom = innerPadding.calculateBottomPadding()
+            )
+
         ){
-            items(30){
+            items(30){index->
                 MessageCard(
                     navController = navController,
                     modifier = Modifier.clickable{
                         navController.navigate("chat")
-                    }
+                    },
+                    index = index
                 )
             }
         }
@@ -74,9 +86,10 @@ fun ChatListPage(
 @Composable
 fun MessageCard(
     navController: NavController,
-    modifier: Modifier
+    modifier: Modifier,
+    index: Int
 ){
-    val user = User(R.mipmap.ic_default,"username", "message")
+    val user = User(R.mipmap.ic_default,"username", "message${index + 1}")
 //    Surface (
 //        shape = MaterialTheme.shapes.medium,
 //        shadowElevation = 5.dp,

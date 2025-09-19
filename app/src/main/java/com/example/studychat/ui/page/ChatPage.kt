@@ -3,11 +3,13 @@ package com.example.studychat.ui.page
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -150,7 +152,6 @@ fun Message(
         }
         Surface (
             shape = MaterialTheme.shapes.medium,
-            shadowElevation = 5.dp,
             color = bubleColor,
             modifier = Modifier
                 .padding( horizontal = 8.dp, vertical = 10.dp)
@@ -200,8 +201,7 @@ fun UserInput(onMessageSent: (String) -> Unit){
         Spacer(modifier = Modifier.width(8.dp))
         Button(
             modifier = Modifier
-                .heightIn(48.dp)
-                .align(Alignment.CenterVertically),
+                .heightIn(48.dp),
             shape = RoundedCornerShape(12.dp),
 
             onClick = {
@@ -210,7 +210,6 @@ fun UserInput(onMessageSent: (String) -> Unit){
                     text = ""
                 }
             },
-
         ){
             Text(
                 text = "send",
@@ -219,11 +218,11 @@ fun UserInput(onMessageSent: (String) -> Unit){
     }
 }
 
-//@Preview
-//@Composable
-//fun UserInputPreview(){
-//    UserInput()
-//}
+@Preview
+@Composable
+fun UserInputPreview(){
+    UserInput(onMessageSent = {})
+}
 //
 //@Preview
 //@Composable
