@@ -42,24 +42,20 @@ import com.example.studychat.R
 import com.example.studychat.data.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun ChatListPage(
     navController: NavController
-){
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MediumTopAppBar(
-                title = {
-                    Text("消息")
-                },
+                title = { Text("消息") },
                 scrollBehavior = scrollBehavior
             )
-        },
-    )
-    { innerPadding ->
+        }
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
@@ -68,14 +64,15 @@ fun ChatListPage(
                 end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                 bottom = innerPadding.calculateBottomPadding()
             )
-
-        ){
-            items(30){index->
+        ) {
+            items(30) { index ->
                 MessageCard(
                     navController = navController,
-                    modifier = Modifier.clickable{
-                        navController.navigate("chat")
-                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate("chat")
+                        },
                     index = index
                 )
             }
