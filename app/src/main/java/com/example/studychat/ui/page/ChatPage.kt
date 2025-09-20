@@ -176,9 +176,8 @@ fun Message(
         }
     }
 }
-
 @Composable
-fun UserInput(onMessageSent: (String) -> Unit){
+fun UserInput(onMessageSent: (String) -> Unit) {
     var text by rememberSaveable { mutableStateOf("") }
 
     Row(
@@ -186,34 +185,33 @@ fun UserInput(onMessageSent: (String) -> Unit){
             .fillMaxWidth()
             .padding(8.dp)
             .imePadding(),
-        verticalAlignment = Alignment.CenterVertically,
-    ){
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
-            label = { Text("waiting input")},
+            placeholder = { Text("waiting input") },
             modifier = Modifier
                 .weight(1f)
                 .heightIn(min = 48.dp),
             maxLines = 4,
             shape = RoundedCornerShape(12.dp),
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Button(
-            modifier = Modifier
-                .heightIn(48.dp),
-            shape = RoundedCornerShape(12.dp),
 
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Button(
             onClick = {
                 if (text.isNotBlank()) {
-                    onMessageSent(text)
+                    onMessageSent(text.trim())
                     text = ""
                 }
             },
-        ){
-            Text(
-                text = "send",
-            )
+            modifier = Modifier.height(48.dp),
+            shape = RoundedCornerShape(12.dp),
+            enabled = text.isNotBlank()
+        ) {
+            Text("send")
         }
     }
 }
