@@ -3,6 +3,13 @@ package com.example.studychat.ui
 import android.net.http.SslCertificate.restoreState
 import android.net.http.SslCertificate.saveState
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import com.example.studychat.R
 import androidx.compose.material3.BottomAppBar
@@ -15,9 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -71,11 +80,15 @@ fun App(navController: NavController){
         AppNavHost(
             navController = innerNavController,
             startDestination = startDestination,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(
+                start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+                bottom = innerPadding.calculateBottomPadding()
+            ),
             onLogout = {
                 PreferenceUtils.putBoolean("isLogin", false)
-                navController.navigate("login"){
-                    popUpTo("main"){ inclusive = true}
+                navController.navigate("login") {
+                    popUpTo("main") { inclusive = true }
                 }
             }
         )
@@ -92,7 +105,11 @@ fun AppNavHost(
     NavHost(
         navController,
         startDestination = startDestination.route,
-        modifier = modifier
+        modifier = modifier,
+        enterTransition = { slideInHorizontally(tween()) { it } },
+        exitTransition = { slideOutHorizontally(tween()) { -it } + fadeOut(tween()) },
+        popEnterTransition = { slideInHorizontally(tween()) { -it } },
+        popExitTransition = { slideOutHorizontally(tween()) { it } }
     ){
         Destination.entries.forEach{ destination ->
             composable(destination.route){
