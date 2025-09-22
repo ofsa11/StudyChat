@@ -69,10 +69,7 @@ fun ChatListPage(
                 MessageCard(
                     navController = navController,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate("chat")
-                        },
+                        .fillMaxWidth(),
                     index = index
                 )
             }
@@ -105,7 +102,10 @@ fun MessageCard(
             .padding(horizontal = 12.dp, vertical = 5.dp,)
     ){
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .clickable{
+                    navController.navigate("chat")
+                },
             verticalAlignment = Alignment.CenterVertically
         ){
             AsyncImage(
