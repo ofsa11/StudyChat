@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.studychat.R
 import com.example.studychat.data.model.User
@@ -32,7 +33,7 @@ import com.example.studychat.utils.UserManageUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelfPage(onLogout: () -> Unit){
+fun SelfPage(navController: NavController){
     val context = LocalContext.current
     val userManage = remember { UserManageUtils(context) }
     val user = User(R.mipmap.ic_default,"username", "message")
@@ -49,7 +50,7 @@ fun SelfPage(onLogout: () -> Unit){
                     IconButton(
                         onClick = {
                             userManage.Logout()
-                            onLogout()
+                            //onLogout()
                         }
                     ){
                         Icon(

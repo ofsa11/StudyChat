@@ -26,25 +26,27 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = if(isLogin) "main" else "login"
-                ){
-                    composable("login"){
+                    startDestination = if (isLogin) "main" else "login"
+                ) {
+                    // 登录
+                    composable("login") {
                         UserManagePage(
                             onLoginSuccess = {
-                                PreferenceUtils.putBoolean("isLogin",true)
-                                navController.navigate("main"){
-                                    popUpTo("login"){
-                                        inclusive = true
-                                    }
+                                PreferenceUtils.putBoolean("isLogin", true)
+                                navController.navigate("main") {
+                                    popUpTo("login") { inclusive = true }
                                 }
                             }
                         )
                     }
+
                     composable("main") {
                         App(navController)
                     }
+                    composable("chat") {
+                        ChatPage(navController)
+                    }
                 }
-                //ChatPage()
             }
         }
     }
