@@ -82,14 +82,6 @@ fun MessageCard(
     index: Int
 ){
     val user = User(R.mipmap.ic_default,"username", "message${index + 1}")
-//    Surface (
-//        shape = MaterialTheme.shapes.medium,
-//        shadowElevation = 5.dp,
-//        color = MaterialTheme.colorScheme.primary,
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(8.dp)
-//    )
     Card (
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
@@ -102,7 +94,7 @@ fun MessageCard(
         Row(
             modifier = Modifier.fillMaxWidth()
                 .clickable{
-                    navController.navigate("chat")
+                    navController.navigate("Chat")
                 },
             verticalAlignment = Alignment.CenterVertically
         ){

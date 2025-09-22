@@ -69,7 +69,7 @@ fun ChatPage(
     // 用于自动滚动列表
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    
+
     Scaffold (
         topBar = {
             TopAppBar(
