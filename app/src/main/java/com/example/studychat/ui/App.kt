@@ -6,6 +6,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Menu
@@ -26,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -44,75 +48,12 @@ import com.example.studychat.ui.page.SelfPage
 @Composable
 fun App(navController: NavController) {
     val innerNavController = rememberNavController()
-//    val navBackStackEntry by innerNavController.currentBackStackEntryAsState()
-//    val startDestination = Destination.ChatListPage
-//    var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
-//    val currentRoute = navBackStackEntry?.destination?.route
-//    val noBottomBarRoutes = listOf("chat")//不需要底部导航栏的界面
-//    val showBottomBar = currentRoute !in noBottomBarRoutes
-
 
     val item = listOf(
         BottomNavItem("聊天", Icons.Filled.Menu, Icons.Outlined.Menu, "ChatList"),
         BottomNavItem("联系人", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle, "Contact"),
         BottomNavItem("我的", Icons.Filled.Person, Icons.Outlined.Person, "Self"),
     )
-//    AnimatedContent(
-//        targetState = showBottomBar,
-//        transitionSpec = {
-//            fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
-//        },
-//        label = "ScaffoldContent"
-//    ) { targetShowBottomBar ->
-//        Scaffold(
-//            bottomBar = {
-//                if (targetShowBottomBar) {
-//                    BottomAppBar {
-//                        NavigationBar {
-//                            Destination.entries.forEachIndexed { index, destination ->
-//                                NavigationBarItem(
-//                                    selected = selectedDestination == index,
-//                                    onClick = {
-//                                        innerNavController.navigate(destination.route) {
-//                                            popUpTo(innerNavController.graph.startDestinationId) {
-//                                                saveState = true
-//                                            }
-//                                            launchSingleTop = true
-//                                            restoreState = true
-//                                        }
-//                                        selectedDestination = index
-//                                    },
-//                                    icon = {
-//                                        Icon(
-//                                            painter = painterResource(destination.icon),
-//                                            contentDescription = destination.contentDescription
-//                                        )
-//                                    },
-//                                    label = { Text(destination.label) }
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        ) { innerPadding ->
-//            AppNavHost(
-//                navController = innerNavController,
-//                startDestination = startDestination,
-//                modifier = Modifier.padding(
-//                    start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-//                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-//                    bottom = if (targetShowBottomBar) innerPadding.calculateBottomPadding() else 0.dp
-//                ),
-//                onLogout = {
-//                    PreferenceUtils.putBoolean("isLogin", false)
-//                    navController.navigate("login") {
-//                        popUpTo("main") { inclusive = true }
-//                    }
-//                }
-//            )
-//        }
-//    }
 
     Scaffold(
         bottomBar = {
@@ -146,8 +87,13 @@ fun App(navController: NavController) {
                 }
             }
         }
-    ) {
+    ) { innerPadding ->
         NavHost(
+            modifier = Modifier.padding(
+                    start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+                    bottom = innerPadding.calculateBottomPadding()
+            ),
             navController = innerNavController,
             startDestination = item.first().route
         ) {
@@ -158,52 +104,6 @@ fun App(navController: NavController) {
     }
 
 }
-
-@Composable
-fun AppNavHost(
-    navController: NavHostController,
-    startDestination: Destination,
-    modifier: Modifier,
-    onLogout: () -> Unit
-) {
-    NavHost(
-        navController,
-        startDestination = startDestination.route,
-        modifier = modifier,
-        enterTransition = { slideInHorizontally(tween()) { it } },
-        exitTransition = { slideOutHorizontally(tween()) { -it } + fadeOut(tween()) },
-        popEnterTransition = { slideInHorizontally(tween()) { -it } },
-        popExitTransition = { slideOutHorizontally(tween()) { it } }
-    ) {
-        Destination.entries.forEach { destination ->
-            composable(destination.route) {
-                when (destination) {
-                    Destination.ChatListPage -> ChatListPage(navController)
-                    Destination.ContactPage -> ContactPage(navController)
-                    Destination.SelfPage -> SelfPage(navController)
-                }
-            }
-        }
-
-        composable("chat") {
-            ChatPage(navController)
-        }
-
-    }
-}
-
-enum class Destination(
-    val route: String,
-    val label: String,
-    @DrawableRes val icon: Int,
-    val contentDescription: String
-) {
-    ChatListPage("chatlist", "ChatList", R.drawable.ic_chatlist, "ChatList"),
-    ContactPage("contact", "Contact", R.drawable.ic_contact, "Contact"),
-    SelfPage("self", "Self", R.drawable.ic_myself, "Self"),
-}
-
-
 data class BottomNavItem(
     val label: String,
     val selectIcon: ImageVector,
